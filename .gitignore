@@ -1,0 +1,16 @@
+.cache/
+build/
+node_modules/
+npm-debug.log*
+.env
+.env.local
+
+# MacOS
+.DS_Store
+
+# IDEs
+.idea
+.vscode
+
+# HoundDog.ai
+*hounddog*
