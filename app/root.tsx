@@ -17,6 +17,7 @@ import {
   useSubmit,
 } from "@remix-run/react";
 import appStylesHref from "./app.css?url";
+import tailwindStylesHref from "./tailwind.css?url";
 import { createEmptyPatient, getPatients } from "./data";
 import { useEffect } from "react";
 
@@ -26,6 +27,7 @@ export const action = async () => {
 };
 
 export const links: LinksFunction = () => [
+  { rel: "stylesheet", href: tailwindStylesHref },
   { rel: "stylesheet", href: appStylesHref },
 ];
 
@@ -54,7 +56,7 @@ export default function App() {
   return (
     <html lang="en">
       <head>
-        <title>HoundDog.ai Healthcare App</title>
+        <title>Avocado Doctors Portal</title>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
@@ -62,8 +64,11 @@ export default function App() {
       </head>
       <body>
         <div id="sidebar">
-          <h1>HoundDog.ai Test Healthcare App</h1>
-          <div>
+          <footer className="text-sm">
+            <div>Avocado Doctors Portal</div>
+            <div className="text-xs italic">© 2024</div>
+          </footer>
+          <div className="h-16">
             <Form
               id="search-form"
               onChange={(event) => {
@@ -116,13 +121,35 @@ export default function App() {
             )}
           </nav>
         </div>
-        <div
-          className={
-            navigation.state === "loading" && !searching ? "loading" : ""
-          }
-          id="detail"
-        >
-          <Outlet />
+        <div className="flex-1">
+          <div className="h-16 bg-neutral-100 flex justify-between items-center px-8 border-b">
+            <div className="flex items-center">
+              <img
+                src="/avocado-logo-transparent.png"
+                alt="Avatar of Dr"
+                className="w-8 h-8 mr-2"
+              />
+              <span className="font-bold">Avocado Doctors Portal</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-10 h-10 rounded-full overflow-hidden mr-2">
+                <img
+                  src="/dr-thumb.png"
+                  alt="Avatar of Dr"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <span className="text-sm">Dr. John Doe</span>
+            </div>
+          </div>
+          <div
+            className={
+              navigation.state === "loading" && !searching ? "loading" : ""
+            }
+            id="outlet"
+          >
+            <Outlet />
+          </div>
         </div>
         <ScrollRestoration />
         <Scripts />

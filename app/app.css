@@ -103,8 +103,8 @@ body {
 }
 
 #sidebar {
+  @apply bg-neutral-100;
   width: 22rem;
-  background-color: #f7f7f7;
   border-right: solid 1px #e3e3e3;
   display: flex;
   flex-direction: column;
@@ -115,11 +115,7 @@ body {
   padding-right: 2rem;
 }
 
-#sidebar h1 {
-  font-size: 1rem;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
+#sidebar footer {
   margin: 0;
   padding: 1rem 2rem;
   border-top: 1px solid #e3e3e3;
@@ -127,7 +123,7 @@ body {
   line-height: 1;
 }
 
-#sidebar h1::before {
+#sidebar footer::before {
   margin-right: 0.5rem;
   position: relative;
   top: 1px;
@@ -250,13 +246,12 @@ i {
   }
 }
 
-#detail {
-  flex: 1;
+#outlet {
   padding: 2rem 4rem;
   width: 100%;
 }
 
-#detail.loading {
+#outlet.loading {
   opacity: 0.25;
   transition: opacity 200ms;
   transition-delay: 200ms;
