@@ -18,18 +18,19 @@ import {
 } from "@remix-run/react";
 import appStylesHref from "./app.css?url";
 import tailwindStylesHref from "./tailwind.css?url";
+
 import { createEmptyPatient, getPatients } from "./data";
 import { useEffect } from "react";
-
-export const action = async () => {
-  const patient = await createEmptyPatient();
-  return redirect(`/patients/${patient.id}/edit`);
-};
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: tailwindStylesHref },
   { rel: "stylesheet", href: appStylesHref },
 ];
+
+export const action = async () => {
+  const patient = await createEmptyPatient();
+  return redirect(`/patients/${patient.id}/edit`);
+};
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
@@ -64,9 +65,9 @@ export default function App() {
       </head>
       <body>
         <div id="sidebar">
-          <footer className="text-sm">
+          <footer className="text-sm italic">
             <div>Avocado Doctors Portal</div>
-            <div className="text-xs italic">© 2024</div>
+            <div className="text-xs">© 2024 v1.0</div>
           </footer>
           <div className="h-16">
             <Form
@@ -76,22 +77,29 @@ export default function App() {
                 submit(event.currentTarget, { replace: !isFirstSearch });
               }}
               role="search"
+              className="w-full"
             >
               <input
                 id="q"
                 className={searching ? "loading" : ""}
                 aria-label="Search patients"
                 defaultValue={q || ""}
-                placeholder="Search"
+                placeholder="Search patient"
                 type="search"
                 name="q"
               />
               <div id="search-spinner" aria-hidden hidden={!searching} />
             </Form>
-            <Form method="post">
-              <button type="submit">New</button>
-            </Form>
           </div>
+          <Form method="post" className="w-full">
+            <button
+              type="submit"
+              className="btn w-full"
+              style={{ marginTop: "1rem" }}
+            >
+              New Patient
+            </button>
+          </Form>
           <nav>
             {patients.length ? (
               <ul>

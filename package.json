@@ -8,23 +8,28 @@
     "dev": "remix vite:dev",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "remix-serve build/server/index.js",
-    "typecheck": "tsc"
+    "tsc": "tsc"
   },
   "dependencies": {
     "@remix-run/node": "^2.9.1",
     "@remix-run/react": "^2.9.1",
     "@remix-run/serve": "^2.9.1",
     "isbot": "^4.1.0",
+    "luxon": "^3.4.4",
     "match-sorter": "^6.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-input-mask": "^2.0.4",
+    "react-responsive-modal": "^6.4.2",
     "sort-by": "^1.2.0",
     "tiny-invariant": "^1.3.1"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.9.1",
+    "@types/luxon": "^3.4.2",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
+    "@types/react-input-mask": "^3.0.5",
     "@typescript-eslint/eslint-plugin": "^6.13.0",
     "@typescript-eslint/parser": "^6.13.0",
     "autoprefixer": "^10.4.19",

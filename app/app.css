@@ -29,7 +29,7 @@ body {
 }
 textarea,
 input,
-button {
+button.btn {
   font-size: 1rem;
   font-family: inherit;
   border: none;
@@ -40,18 +40,18 @@ button {
   line-height: 1.5;
   margin: 0;
 }
-button {
+button.btn {
   color: #3992ff;
   font-weight: 500;
 }
 
 textarea:hover,
 input:hover,
-button:hover {
+button.btn:hover {
   box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.6), 0 1px 2px hsla(0, 0%, 0%, 0.2);
 }
 
-button:active {
+button.btn:active {
   box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.4);
   transform: translateY(1px);
 }
@@ -66,21 +66,21 @@ button:active {
   align-items: center;
   margin-top: 0.25rem;
 }
-#patient h1 form button {
+#patient h1 form button.btn {
   box-shadow: none;
   font-size: 1.5rem;
   font-weight: 400;
   padding: 0;
 }
-#patient h1 form button[value="true"] {
+#patient h1 form button.btn[value="true"] {
   color: #a4a4a4;
 }
-#patient h1 form button[value="true"]:hover,
-#patient h1 form button[value="false"] {
+#patient h1 form button.btn[value="true"]:hover,
+#patient h1 form button.btn[value="false"] {
   color: #eeb004;
 }
 
-form[action$="destroy"] button {
+form[action$="destroy"] button.btn {
   color: #f44250;
 }
 
@@ -247,7 +247,7 @@ i {
 }
 
 #outlet {
-  padding: 2rem 4rem;
+  padding: 1rem 4rem;
   width: 100%;
 }
 
@@ -297,43 +297,6 @@ i {
   margin: 1rem 0;
 }
 
-#patient-form {
-  display: flex;
-  max-width: 40rem;
-  flex-direction: column;
-  gap: 1rem;
-}
-#patient-form > p:first-child {
-  margin: 0;
-  padding: 0;
-}
-#patient-form > p:first-child > :nth-child(2) {
-  margin-right: 1rem;
-}
-#patient-form > p:first-child,
-#patient-form label {
-  display: flex;
-}
-#patient-form p:first-child span,
-#patient-form label span {
-  width: 8rem;
-}
-#patient-form p:first-child input,
-#patient-form label input,
-#patient-form label textarea {
-  flex-grow: 2;
-}
-
-#patient-form p:last-child {
-  display: flex;
-  gap: 0.5rem;
-  margin: 0 0 0 8rem;
-}
-
-#patient-form p:last-child button[type="button"] {
-  color: inherit;
-}
-
 #index-page {
   margin: 2rem auto;
   text-align: center;
@@ -359,4 +322,8 @@ i {
   align-items: center;
   justify-content: center;
   width: 100%;
+}
+
+.customModal {
+  padding: 32px !important;
 }

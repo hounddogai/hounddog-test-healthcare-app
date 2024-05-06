@@ -1,18 +1,27 @@
-////////////////////////////////////////////////////////////////////////////////
-// 🛑 Nothing in here has anything to do with Remix, it's just a fake database
-////////////////////////////////////////////////////////////////////////////////
-
 import { matchSorter } from "match-sorter";
 // @ts-expect-error - no types, but it's a tiny function
 import sortBy from "sort-by";
 import invariant from "tiny-invariant";
+
+export type Visit = {
+  date?: string;
+  vitalSigns?: string;
+  symptoms?: string;
+  diagnosis?: string;
+  treatment?: string;
+};
 
 type PatientMutation = {
   id?: string;
   firstName?: string;
   lastName?: string;
   mrn?: string;
+  dob?: string;
+  address?: string;
+  phoneNumber?: string;
+  bloodType?: string;
   notes?: string;
+  visits?: Visit[];
 };
 
 export type PatientRecord = PatientMutation & {
@@ -87,6 +96,21 @@ export async function updatePatient(id: string, updates: PatientMutation) {
   return patient;
 }
 
+export async function updateVisits(id: string, visit: Visit) {
+  const patient = await fakePatients.get(id);
+  if (!patient) {
+    throw new Error(`No patient found for ${id}`);
+  }
+
+  await fakePatients.set(id, {
+    ...patient,
+    visits: [...(patient.visits || []), visit],
+  });
+
+  console.log(`Patient ${patient.id} updated`, patient);
+  return patient;
+}
+
 export async function deletePatient(id: string) {
   fakePatients.destroy(id);
 }
@@ -96,21 +120,55 @@ export async function deletePatient(id: string) {
     firstName: "Jane",
     lastName: "Smith",
     mrn: "019-111-999",
+    dob: "12/09/1955",
+    address: "123 Main St, Springfield, IL 62701",
+    phoneNumber: "434-512-6512",
+    bloodType: "O+",
+    notes: "Allergic to penicillin",
+    visits: [
+      {
+        date: "04/21/2024",
+        vitalSigns: "BP 120/80, HR 70",
+        symptoms: "Headache",
+        diagnosis: "Migraine",
+        treatment: "Tylenol 100mg",
+      },
+      {
+        date: "05/04/2024",
+        vitalSigns: "BP 130/90, HR 80",
+        symptoms: "Sore throat",
+        diagnosis: "Strep throat",
+        treatment: "Amoxicillin 500mg",
+      },
+    ],
   },
   {
     firstName: "Robert",
     lastName: "Johnson",
     mrn: "018-222-555",
+    dob: "02/19/1984",
+    address: "456 Elm St, Springfield, IL 62701",
+    phoneNumber: "123-553-8413",
+    bloodType: "AB-",
   },
   {
     firstName: "Sarah",
     lastName: "Williams",
     mrn: "029-125-874",
+    dob: "10/23/2009",
+    address: "789 Oak St, Springfield, IL 62701",
+    phoneNumber: "463-555-7833",
+    bloodType: "A+",
+    notes: "Allergic to peanuts",
   },
   {
     firstName: "Michael",
     lastName: "Brown",
     mrn: "049-185-898",
+    dob: "03/05/1973",
+    address: "1011 Pine St, Springfield, IL 62701",
+    phoneNumber: "457-333-4907",
+    bloodType: "B-",
   },
 ].forEach((patient) => {
   fakePatients.create({
