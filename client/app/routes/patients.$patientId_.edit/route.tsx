@@ -7,8 +7,7 @@ import {
 import { Form, useLoaderData, useNavigate } from "@remix-run/react";
 import MaskedInput from "react-input-mask";
 import invariant from "tiny-invariant";
-
-import { getPatient, updatePatient } from "~/data";
+import { getPatient, updatePatient } from "~/service";
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.patientId, "Missing patientId param");

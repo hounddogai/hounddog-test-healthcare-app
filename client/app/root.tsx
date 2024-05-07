@@ -6,6 +6,7 @@ import {
 } from "@remix-run/node";
 import {
   Form,
+  Link,
   Links,
   Meta,
   NavLink,
@@ -19,8 +20,8 @@ import {
 import appStylesHref from "./app.css?url";
 import tailwindStylesHref from "./tailwind.css?url";
 
-import { createEmptyPatient, getPatients } from "./data";
 import { useEffect } from "react";
+import { createEmptyPatient, getPatients } from "./service";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: tailwindStylesHref },
@@ -131,14 +132,14 @@ export default function App() {
         </div>
         <div className="flex-1">
           <div className="h-16 bg-neutral-100 flex justify-between items-center px-8 border-b">
-            <div className="flex items-center">
+            <Link to="/" className="flex items-center">
               <img
                 src="/avocado-logo-transparent.png"
                 alt="Avatar of Dr"
                 className="w-8 h-8 mr-2"
               />
               <span className="font-bold">Avocado Doctors Portal</span>
-            </div>
+            </Link>
             <div className="flex items-center">
               <div className="w-10 h-10 rounded-full overflow-hidden mr-2">
                 <img

@@ -1,8 +1,9 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
-import { getPatient } from "~/data";
+
 import { json } from "@remix-run/node";
+import { getPatient } from "~/service";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.patientId, "Missing patientId param");

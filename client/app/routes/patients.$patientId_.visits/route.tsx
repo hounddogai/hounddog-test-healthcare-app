@@ -10,9 +10,11 @@ import { Form, useLoaderData, useNavigate } from "@remix-run/react";
 import { useState } from "react";
 import { Modal } from "react-responsive-modal";
 import invariant from "tiny-invariant";
-import { Visit, getPatient, updateVisits } from "~/data";
+
 import "react-responsive-modal/styles.css";
 import MaskedInput from "react-input-mask";
+import { getPatient, updateVisits } from "~/service";
+import { Visit } from "~/types";
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.patientId, "Missing patientId param");
@@ -34,7 +36,6 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 export default function Visits() {
   const { patient } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
-  console.log(patient);
   const [selectedVisit, setSelectedVisit] = useState<Visit | null>(null);
 
   const [open, setOpen] = useState(false);
@@ -71,8 +72,7 @@ export default function Visits() {
           </p>
           <div className="w-64 mt-6">
             <div>
-              {patient.visits &&
-                patient.visits.length > 0 &&
+              {patient.visits && patient.visits.length > 0 ? (
                 patient.visits.map((visit, index) => {
                   return (
                     <div key={`${visit.date}-${index}`}>
@@ -93,7 +93,10 @@ export default function Visits() {
                       </div>
                     </div>
                   );
-                })}
+                })
+              ) : (
+                <p>There are no visits for this patient.</p>
+              )}
             </div>
           </div>
         </div>
