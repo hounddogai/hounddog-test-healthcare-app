@@ -19,7 +19,16 @@ import { Visit } from "~/types";
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.patientId, "Missing patientId param");
   const formData = await request.formData();
-  const visitData = Object.fromEntries(formData);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const visitData: any = Object.fromEntries(formData);
+  const newVisitData: Visit = {
+    date: visitData.date,
+    vitalSigns: visitData.vitalSigns,
+    symptoms: visitData.symptoms,
+    diagnosis: visitData.diagnosis,
+    treatment: visitData.treatment,
+  };
+  console.log("Creating New Visit with data:", newVisitData);
   await updateVisits(params.patientId, visitData);
   return redirect(`/patients/${params.patientId}/visits`);
 };

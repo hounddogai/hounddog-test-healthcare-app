@@ -8,12 +8,25 @@ import { Form, useLoaderData, useNavigate } from "@remix-run/react";
 import MaskedInput from "react-input-mask";
 import invariant from "tiny-invariant";
 import { getPatient, updatePatient } from "~/service";
+import { PatientMutation } from "~/types";
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.patientId, "Missing patientId param");
   const formData = await request.formData();
-  const updates = Object.fromEntries(formData);
-  await updatePatient(params.patientId, updates);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const updates: any = Object.fromEntries(formData);
+  const newPatientData: PatientMutation = {
+    firstName: updates.firstName,
+    lastName: updates.lastName,
+    mrn: updates.mrn,
+    dob: updates.dob,
+    address: updates.address,
+    phoneNumber: updates.phoneNumber,
+    bloodType: updates.bloodType,
+    notes: updates.notes,
+  };
+  console.log("Updating Patient with data:", newPatientData);
+  await updatePatient(params.patientId, newPatientData);
   return redirect(`/patients/${params.patientId}/`);
 };
 

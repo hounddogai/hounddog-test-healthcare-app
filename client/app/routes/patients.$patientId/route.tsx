@@ -32,10 +32,6 @@ export default function Patient() {
   const navigate = useNavigate();
 
   const handleFavoritePatient = () => {
-    if (typeof window === "undefined") {
-      return;
-    }
-
     if (!patient.mrn) {
       return false;
     }
