@@ -1,6 +1,6 @@
 import { PatientMutation, PatientRecord, Visit } from "./types";
 
-const BASE_URL = "http://localhost:5174";
+const BASE_URL = process.env.VITE_API_BASE_URL || "http://localhost:5174";
 
 type AllowedFetchBodies = PatientMutation | Visit;
 const baseFetch = async <T>(

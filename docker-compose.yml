@@ -1,0 +1,28 @@
+services:
+  client:
+    container_name: healthcare-app-client
+    image: node:21-bookworm
+    volumes:
+      - ./client:/app
+      - /app/node_modules/
+    working_dir: /app
+    ports:
+      - "5173:5173"
+    expose:
+      - "5173"
+    environment:
+      - VITE_API_BASE_URL=http://host.docker.internal:5174
+    command: sh -c "npm install --no-fund --no-audit && npm run dev -- --host"
+
+  server:
+    container_name: healthcare-app-server
+    image: node:21-bookworm
+    volumes:
+      - ./server:/app
+      - /app/node_modules/
+    working_dir: /app
+    ports:
+      - "5174:5174"
+    expose:
+      - "5174"
+    command: sh -c "npm install --no-fund --no-audit && npm run start -- --host"
