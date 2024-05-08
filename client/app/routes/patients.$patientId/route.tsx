@@ -4,6 +4,7 @@ import invariant from "tiny-invariant";
 
 import { json } from "@remix-run/node";
 import { getPatient } from "~/service";
+import { useEffect } from "react";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.patientId, "Missing patientId param");
@@ -26,10 +27,49 @@ function toggleStringInArray(array: string[], stringToToggle: string) {
   }
 }
 
+declare global {
+  interface Window {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    dataLayer: any[];
+  }
+}
+
 export default function Patient() {
   const { patient } = useLoaderData<typeof loader>();
   console.log("Patient Loaded:", patient);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await fetch("http://localhost:5174/set-cookie");
+      console.log("response", response);
+    }
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    // Sending to Google Analytics
+    if (window?.dataLayer) {
+      window.dataLayer.push({
+        event: "Visiting Patient Page",
+        patientFirstName: patient.firstName,
+        patientLastName: patient.lastName,
+        patientMrn: patient.mrn,
+        patientDob: patient.dob,
+        patientAddress: patient.address,
+        patientPhoneNumber: patient.phoneNumber,
+        patientBloodType: patient.bloodType,
+      });
+    }
+  }, [
+    patient.address,
+    patient.bloodType,
+    patient.dob,
+    patient.firstName,
+    patient.lastName,
+    patient.mrn,
+    patient.phoneNumber,
+  ]);
 
   const handleFavoritePatient = () => {
     if (!patient.mrn) {

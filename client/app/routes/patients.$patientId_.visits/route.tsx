@@ -6,6 +6,7 @@ import {
   json,
   redirect,
 } from "@remix-run/node";
+import * as Sentry from "@sentry/remix";
 import { Form, useLoaderData, useNavigate } from "@remix-run/react";
 import { useState } from "react";
 import { Modal } from "react-responsive-modal";
@@ -19,6 +20,7 @@ import { Visit } from "~/types";
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.patientId, "Missing patientId param");
   const formData = await request.formData();
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const visitData: any = Object.fromEntries(formData);
   const newVisitData: Visit = {
@@ -28,8 +30,19 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
     diagnosis: visitData.diagnosis,
     treatment: visitData.treatment,
   };
-  console.log("Creating New Visit with data:", newVisitData);
-  await updateVisits(params.patientId, visitData);
+
+  try {
+    console.log("Creating New Visit with data:", newVisitData);
+    await updateVisits(params.patientId, visitData);
+  } catch (error) {
+    Sentry.captureException(error, {
+      tags: {
+        action: "create-visit",
+        visitData: JSON.stringify(newVisitData),
+      },
+    });
+  }
+
   return redirect(`/patients/${params.patientId}/visits`);
 };
 
@@ -58,12 +71,12 @@ export default function Visits() {
         <button
           onClick={() => navigate(-1)}
           type="button"
-          className="btn w-40"
+          className="btn w-48"
           style={{ color: "black" }}
         >
           Go Back
         </button>
-        <button type="submit" className="mt-8 btn w-40" onClick={onOpenModal}>
+        <button type="submit" className="btn w-48" onClick={onOpenModal}>
           Create New Visit
         </button>
       </div>

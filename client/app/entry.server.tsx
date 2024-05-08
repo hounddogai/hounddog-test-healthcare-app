@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/remix";
 import { PassThrough } from "node:stream";
 
 import type { AppLoadContext, EntryContext } from "@remix-run/node";
@@ -6,6 +7,16 @@ import { RemixServer } from "@remix-run/react";
 import * as isbotModule from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function handleError(error: unknown, { request }: any) {
+  Sentry.captureRemixServerException(error, "remix.server", request);
+}
+
+Sentry.init({
+  environment: "dev",
+  tracesSampleRate: 1,
+});
+
 const ABORT_DELAY = 5_000;
 
 export default function handleRequest(
@@ -13,9 +24,10 @@ export default function handleRequest(
   responseStatusCode: number,
   responseHeaders: Headers,
   remixContext: EntryContext,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext
 ) {
-  let prohibitOutOfOrderStreaming =
+  const prohibitOutOfOrderStreaming =
     isBotRequest(request.headers.get("user-agent")) || remixContext.isSpaMode;
 
   return prohibitOutOfOrderStreaming

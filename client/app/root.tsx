@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/remix";
 import {
   json,
   LinksFunction,
@@ -16,6 +17,7 @@ import {
   useLoaderData,
   useNavigation,
   useSubmit,
+  useRouteError,
 } from "@remix-run/react";
 import appStylesHref from "./app.css?url";
 import tailwindStylesHref from "./tailwind.css?url";
@@ -40,6 +42,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return json({ patients, q });
 };
 
+export const ErrorBoundary = () => {
+  const error = useRouteError();
+  Sentry.captureRemixErrorBoundaryError(error);
+  return <div>Something went wrong</div>;
+};
+
 export default function App() {
   const { patients, q } = useLoaderData<typeof loader>();
   console.log("Patients Loaded", patients);
@@ -54,6 +62,14 @@ export default function App() {
     if (searchField instanceof HTMLInputElement) {
       searchField.value = q || "";
     }
+  }, [q]);
+
+  // Set user context for Sentry on App load
+  useEffect(() => {
+    Sentry.setUser({
+      doctor_id: "1234",
+      doctor_email: "john.doe@advocadohealth.com",
+    });
   }, [q]);
 
   const isFavoritePatient = (mrn?: string) => {

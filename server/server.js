@@ -2,8 +2,11 @@ const express = require("express");
 const { matchSorter } = require("match-sorter");
 const sortBy = require("sort-by");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
 
 const fakePatients = require("./data");
+const writeAndDownloadData = require("./writeAndDownloadData");
 
 const app = express();
 const port = 5174;
@@ -11,6 +14,10 @@ const port = 5174;
 //
 // MIDDLEWARES
 //
+
+// Enable CORS for all origins (loose policy)
+app.use(cors());
+app.use(cookieParser());
 // Configure body-parser to handle JSON or URL-encoded bodies
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -18,20 +25,26 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //
 // ROUTES
 //
+
 app.get("/", (req, res) => {
   res.send("Hello World from Express!");
 });
 
 app.get("/patients/:id", async (req, res) => {
   const patientId = req.params.id;
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  const result = await fakePatients.get(patientId);
-  res.json(result);
+  const patientInfo = await fakePatients.get(patientId);
+
+  const patientJsonData = JSON.stringify(patientInfo);
+  res.cookie("patient-info", patientJsonData, {
+    maxAge: 1000 * 60 * 60,
+    httpOnly: false,
+  });
+
+  res.json(patientInfo);
 });
 
 app.get("/patients", async (req, res) => {
   const query = req.query.q;
-  await new Promise((resolve) => setTimeout(resolve, 500));
   let patients = await fakePatients.getAll();
   if (query) {
     patients = matchSorter(patients, query, {
@@ -43,14 +56,12 @@ app.get("/patients", async (req, res) => {
 });
 
 app.post("/patients", async (req, res) => {
-  await new Promise((resolve) => setTimeout(resolve, 500));
   const result = await fakePatients.create({});
   res.json(result);
 });
 
 app.patch("/patients/:id", async (req, res) => {
   const patientId = req.params.id;
-  await new Promise((resolve) => setTimeout(resolve, 500));
   const patient = await fakePatients.get(patientId);
   if (!patient) {
     res.json({ error: `No patient found for ${patientId}` });
@@ -63,7 +74,6 @@ app.patch("/patients/:id", async (req, res) => {
 
 app.patch("/patients/:id/visits", async (req, res) => {
   const patientId = req.params.id;
-  await new Promise((resolve) => setTimeout(resolve, 500));
   const patient = await fakePatients.get(patientId);
   if (!patient) {
     res.json({ error: `No patient found for ${patientId}` });
@@ -79,9 +89,36 @@ app.patch("/patients/:id/visits", async (req, res) => {
 
 app.delete("/patients/:id", async (req, res) => {
   const patientId = req.params.id;
-  await new Promise((resolve) => setTimeout(resolve, 500));
   await fakePatients.destroy(patientId);
   res.json({ ok: true });
+});
+
+app.get("/download-visits/:id", async (req, res) => {
+  const patientId = req.params.id;
+  const patient = await fakePatients.get(patientId);
+  if (!patient) {
+    res.json({ error: `No patient found for ${patientId}` });
+  }
+
+  writeAndDownloadData(
+    `${patient.firstName}-${patient.lastName}-${patient.mrn}-visits.txt`,
+    patient.visits,
+    res
+  );
+});
+
+app.get("/download-patient-information/:id", async (req, res) => {
+  const patientId = req.params.id;
+  const patient = await fakePatients.get(patientId);
+  if (!patient) {
+    res.json({ error: `No patient found for ${patientId}` });
+  }
+
+  writeAndDownloadData(
+    `${patient.firstName}-${patient.lastName}-${patient.mrn}-information.txt`,
+    patient,
+    res
+  );
 });
 
 //

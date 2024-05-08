@@ -1,6 +1,7 @@
 import { PatientMutation, PatientRecord, Visit } from "./types";
 
-const BASE_URL = process.env.VITE_API_BASE_URL || "http://localhost:5174";
+export const API_BASE_URL =
+  process?.env?.VITE_API_BASE_URL || "http://localhost:5174";
 
 type AllowedFetchBodies = PatientMutation | Visit;
 const baseFetch = async <T>(
@@ -8,7 +9,7 @@ const baseFetch = async <T>(
   method: "GET" | "POST" | "PATCH" | "DELETE" = "GET",
   body?: AllowedFetchBodies
 ) => {
-  const response = await fetch(`${BASE_URL}${path}`, {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
     method,
     headers: {
       "Content-Type": "application/json",
