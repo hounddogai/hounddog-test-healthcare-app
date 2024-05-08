@@ -22,7 +22,7 @@ const baseFetch = async <T>(
 
 export const getPatients = async (searchParams: string | null) => {
   const res = await baseFetch<PatientRecord[]>(
-    `/patients/${searchParams || ""}`
+    `/patients/?q=${searchParams || ""}`
   );
   return res;
 };
