@@ -42,6 +42,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export default function App() {
   const { patients, q } = useLoaderData<typeof loader>();
+  console.log("Patients Loaded", patients);
   const navigation = useNavigation();
   const submit = useSubmit();
   const searching =
@@ -54,6 +55,22 @@ export default function App() {
       searchField.value = q || "";
     }
   }, [q]);
+
+  const isFavoritePatient = (mrn?: string) => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    if (!mrn) {
+      return false;
+    }
+    const favoriteMrns = window.localStorage.getItem("favoritePatientMrns");
+    if (!favoriteMrns) {
+      return false;
+    }
+    const favoriteMrnsArray: string[] = JSON.parse(favoriteMrns);
+
+    return favoriteMrnsArray.includes(mrn);
+  };
 
   return (
     <html lang="en">
@@ -108,17 +125,30 @@ export default function App() {
                   <li key={patient.id}>
                     <NavLink
                       className={({ isActive, isPending }) =>
-                        isActive ? "active" : isPending ? "pending" : ""
+                        isActive
+                          ? "active flex justify-between"
+                          : isPending
+                          ? "pending flex justify-between"
+                          : ""
                       }
                       to={`patients/${patient.id}`}
                     >
-                      {patient.firstName || patient.lastName ? (
-                        <>
-                          {patient.firstName} {patient.lastName}
-                        </>
-                      ) : (
-                        <i>New Patient</i>
-                      )}{" "}
+                      <div>
+                        {patient.firstName || patient.lastName ? (
+                          <>
+                            {patient.firstName} {patient.lastName}
+                          </>
+                        ) : (
+                          <i>New Patient</i>
+                        )}
+                      </div>
+                      {isFavoritePatient(patient.mrn) ? (
+                        <img
+                          src="/star.svg"
+                          alt="see visit"
+                          className="w-5 h-5"
+                        />
+                      ) : null}
                     </NavLink>
                   </li>
                 ))}

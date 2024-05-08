@@ -1,5 +1,5 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
+import { Form, useLoaderData, useNavigate } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
 import { json } from "@remix-run/node";
@@ -14,8 +14,52 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   return json({ patient });
 };
 
+function toggleStringInArray(array: string[], stringToToggle: string) {
+  const index = array.indexOf(stringToToggle);
+
+  if (index !== -1) {
+    // Remove if present
+    return array.filter((item, idx) => idx !== index);
+  } else {
+    // Add if not present
+    return [...array, stringToToggle];
+  }
+}
+
 export default function Patient() {
   const { patient } = useLoaderData<typeof loader>();
+  console.log("Patient Loaded:", patient);
+  const navigate = useNavigate();
+
+  const handleFavoritePatient = () => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    if (!patient.mrn) {
+      return false;
+    }
+    const favoriteMrns = window.localStorage.getItem("favoritePatientMrns");
+    let favoriteMrnsArray: string[] = [];
+    if (favoriteMrns) {
+      favoriteMrnsArray = JSON.parse(favoriteMrns);
+    }
+
+    console.log("Previous Favorite Patient MRNs", favoriteMrnsArray);
+
+    const favoriteMrnsArrayToStore = toggleStringInArray(
+      favoriteMrnsArray,
+      patient.mrn
+    );
+
+    console.log("New Favorite Patient MRNs", favoriteMrnsArrayToStore);
+
+    window.localStorage.setItem(
+      "favoritePatientMrns",
+      JSON.stringify(favoriteMrnsArrayToStore)
+    );
+    navigate(`/patients/${patient.id}`);
+  };
 
   return (
     <>
@@ -30,6 +74,15 @@ export default function Patient() {
             Edit Patient
           </button>
         </Form>
+
+        <button
+          type="submit"
+          className="btn w-40"
+          onClick={handleFavoritePatient}
+        >
+          Favorite Patient
+        </button>
+
         <Form
           action="destroy"
           method="post"
