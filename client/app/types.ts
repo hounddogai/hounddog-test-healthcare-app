@@ -1,9 +1,9 @@
 export type Visit = {
   date?: string;
   vitalSigns?: string;
-  symptoms?: string;
+  patientSymptoms?: string;
   diagnosis?: string;
-  treatment?: string;
+  medicalTreatment?: string;
 };
 
 export type PatientMutation = {

@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const session = require("express-session");
+const jwt = require("jsonwebtoken");
 
 const fakePatients = require("./data");
 const writeAndDownloadData = require("./writeAndDownloadData");
@@ -40,24 +41,37 @@ app.get("/", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, email } = req.body;
 
   if (username === "valid_user" && password === "valid_password") {
-    const user = { id: 1, username };
-    const token = generateJWT(user);
+    // Get user info from stored data
+    const user = { id: 1, username, email };
+    // Get user IP address
+    const userIpAddress =
+      req.ip || req.headers["x-forwarded-for"] || req.headers["x-real-ip"];
 
+    // Log user login information
+    console.log(`User ${username} logged in from IP: ${userIpAddress}`);
+
+    // Create a JWT token
+    const token = jwt.sign(
+      { user_id: user.id, email, userIpAddress },
+      "secretKey1234",
+      {
+        expiresIn: "30m",
+      }
+    );
+
+    // Set the JWT as a cookie
     res.cookie("jwt", token, {
       httpOnly: true, // Prevent client-side JavaScript access
       secure: process.env.NODE_ENV === "production", // Only send over HTTPS in production
       maxAge: 3600000, // Set expiration time in milliseconds (1 hour here)
     });
 
-    const userIp =
-      req.ip || req.headers["x-forwarded-for"] || req.headers["x-real-ip"];
-    console.log(`User ${username} logged in from IP: ${userIp}`);
-
-    // Store User Ip in Express Session
-    req.session.user_ip = userIp;
+    // Store User Ip and email in Express Session
+    req.session.user_ip = userIpAddress;
+    req.session.user_email = email;
 
     res.json({ message: "Login successful!" });
   } else {

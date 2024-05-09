@@ -12,21 +12,14 @@ import { PatientMutation } from "~/types";
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.patientId, "Missing patientId param");
+
   const formData = await request.formData();
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const updates: any = Object.fromEntries(formData);
-  const newPatientData: PatientMutation = {
-    firstName: updates.firstName,
-    lastName: updates.lastName,
-    mrn: updates.mrn,
-    dob: updates.dob,
-    address: updates.address,
-    phoneNumber: updates.phoneNumber,
-    bloodType: updates.bloodType,
-    notes: updates.notes,
-  };
-  console.log("Updating Patient with data:", newPatientData);
-  await updatePatient(params.patientId, newPatientData);
+  const updates: PatientMutation = Object.fromEntries(formData);
+
+  console.log("Updating Patient with data:", updates);
+  await updatePatient(params.patientId, updates);
   return redirect(`/patients/${params.patientId}/`);
 };
 
@@ -62,9 +55,9 @@ export default function EditPatient() {
         <label className="flex">
           <span className="w-48">First Name</span>
           <input
+            name="firstName"
             defaultValue={patient.firstName}
             aria-label="First name"
-            name="firstName"
             type="text"
             placeholder="First"
             className="w-80"

@@ -26,9 +26,9 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   const newVisitData: Visit = {
     date: visitData.date,
     vitalSigns: visitData.vitalSigns,
-    symptoms: visitData.symptoms,
+    patientSymptoms: visitData.patientSymptoms,
     diagnosis: visitData.diagnosis,
-    treatment: visitData.treatment,
+    medicalTreatment: visitData.medicalTreatment,
   };
 
   try {
@@ -136,11 +136,11 @@ export default function Visits() {
                     {selectedVisit.vitalSigns}
                   </div>
                 ) : null}
-                {selectedVisit.symptoms ? (
+                {selectedVisit.patientSymptoms ? (
                   <div>
                     <strong className="text-lg">Symptoms</strong>
                     <br />
-                    {selectedVisit.symptoms}
+                    {selectedVisit.patientSymptoms}
                   </div>
                 ) : null}
                 {selectedVisit.diagnosis ? (
@@ -150,11 +150,11 @@ export default function Visits() {
                     {selectedVisit.diagnosis}
                   </div>
                 ) : null}
-                {selectedVisit.treatment ? (
+                {selectedVisit.medicalTreatment ? (
                   <div>
                     <strong className="text-lg">Treatment</strong>
                     <br />
-                    {selectedVisit.treatment}
+                    {selectedVisit.medicalTreatment}
                   </div>
                 ) : null}
               </div>
@@ -200,7 +200,7 @@ export default function Visits() {
             <input
               className="w-96"
               defaultValue=""
-              name="symptoms"
+              name="patientSymptoms"
               placeholder="Sore throat"
               type="text"
             />
@@ -220,7 +220,7 @@ export default function Visits() {
             <input
               className="w-96"
               defaultValue=""
-              name="treatment"
+              name="medicalTreatment"
               placeholder="Amoxicillin 500mg"
               type="text"
             />
