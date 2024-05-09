@@ -10,7 +10,6 @@ import {
   Link,
   Links,
   Meta,
-  NavLink,
   Outlet,
   Scripts,
   ScrollRestoration,
@@ -24,6 +23,7 @@ import tailwindStylesHref from "./tailwind.css?url";
 
 import { useEffect } from "react";
 import { createEmptyPatient, getPatients } from "./service";
+import PatientItem from "./patientItem";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: tailwindStylesHref },
@@ -71,22 +71,6 @@ export default function App() {
       doctor_email: "john.doe@advocadohealth.com",
     });
   }, [q]);
-
-  const isFavoritePatient = (mrn?: string) => {
-    if (typeof window === "undefined") {
-      return;
-    }
-    if (!mrn) {
-      return false;
-    }
-    const favoriteMrns = window.localStorage.getItem("favoritePatientMrns");
-    if (!favoriteMrns) {
-      return false;
-    }
-    const favoriteMrnsArray: string[] = JSON.parse(favoriteMrns);
-
-    return favoriteMrnsArray.includes(mrn);
-  };
 
   return (
     <html lang="en">
@@ -138,35 +122,7 @@ export default function App() {
             {patients.length ? (
               <ul>
                 {patients.map((patient) => (
-                  <li key={patient.id}>
-                    <NavLink
-                      className={({ isActive, isPending }) =>
-                        isActive
-                          ? "active flex justify-between"
-                          : isPending
-                          ? "pending flex justify-between"
-                          : ""
-                      }
-                      to={`patients/${patient.id}`}
-                    >
-                      <div>
-                        {patient.firstName || patient.lastName ? (
-                          <>
-                            {patient.firstName} {patient.lastName}
-                          </>
-                        ) : (
-                          <i>New Patient</i>
-                        )}
-                      </div>
-                      {isFavoritePatient(patient.mrn) ? (
-                        <img
-                          src="/star.svg"
-                          alt="see visit"
-                          className="w-5 h-5"
-                        />
-                      ) : null}
-                    </NavLink>
-                  </li>
+                  <PatientItem key={patient.id} patient={patient} />
                 ))}
               </ul>
             ) : (

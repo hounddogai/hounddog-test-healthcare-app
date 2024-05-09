@@ -4,6 +4,7 @@ const sortBy = require("sort-by");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const session = require("express-session");
 
 const fakePatients = require("./data");
 const writeAndDownloadData = require("./writeAndDownloadData");
@@ -21,6 +22,14 @@ app.use(cookieParser());
 // Configure body-parser to handle JSON or URL-encoded bodies
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(
+  session({
+    secret: "sessionSecret",
+    resave: false, // Don't save session if unmodified
+    saveUninitialized: true, // Create session for new users
+    cookie: { secure: false, maxAge: 60000 }, // Change secure to true for HTTPS
+  })
+);
 
 //
 // ROUTES
@@ -28,6 +37,32 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
   res.send("Hello World from Express!");
+});
+
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+
+  if (username === "valid_user" && password === "valid_password") {
+    const user = { id: 1, username };
+    const token = generateJWT(user);
+
+    res.cookie("jwt", token, {
+      httpOnly: true, // Prevent client-side JavaScript access
+      secure: process.env.NODE_ENV === "production", // Only send over HTTPS in production
+      maxAge: 3600000, // Set expiration time in milliseconds (1 hour here)
+    });
+
+    const userIp =
+      req.ip || req.headers["x-forwarded-for"] || req.headers["x-real-ip"];
+    console.log(`User ${username} logged in from IP: ${userIp}`);
+
+    // Store User Ip in Express Session
+    req.session.user_ip = userIp;
+
+    res.json({ message: "Login successful!" });
+  } else {
+    res.status(401).json({ message: "Invalid credentials" });
+  }
 });
 
 app.get("/patients/:id", async (req, res) => {
@@ -68,7 +103,11 @@ app.patch("/patients/:id", async (req, res) => {
   }
 
   const updateData = req.body;
-  await fakePatients.set(patientId, { ...patient, ...updateData });
+  try {
+    await fakePatients.set(patientId, { ...patient, ...updateData });
+  } catch (error) {
+    console.error("Error updating patient data for patient: ", patient);
+  }
   res.json(patient);
 });
 

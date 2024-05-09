@@ -40,14 +40,6 @@ export default function Patient() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    async function fetchData() {
-      const response = await fetch("http://localhost:5174/set-cookie");
-      console.log("response", response);
-    }
-    fetchData();
-  }, []);
-
-  useEffect(() => {
     // Sending to Google Analytics
     if (window?.dataLayer) {
       window.dataLayer.push({
