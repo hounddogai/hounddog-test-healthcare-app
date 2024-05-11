@@ -2,7 +2,7 @@ export type Visit = {
   date?: string;
   vitalSigns?: string;
   patientSymptoms?: string;
-  diagnosis?: string;
+  medicalDiagnosis?: string;
   medicalTreatment?: string;
 };
 

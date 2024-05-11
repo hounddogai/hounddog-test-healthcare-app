@@ -27,7 +27,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
     date: visitData.date,
     vitalSigns: visitData.vitalSigns,
     patientSymptoms: visitData.patientSymptoms,
-    diagnosis: visitData.diagnosis,
+    medicalDiagnosis: visitData.medicalDiagnosis,
     medicalTreatment: visitData.medicalTreatment,
   };
 
@@ -143,11 +143,11 @@ export default function Visits() {
                     {selectedVisit.patientSymptoms}
                   </div>
                 ) : null}
-                {selectedVisit.diagnosis ? (
+                {selectedVisit.medicalDiagnosis ? (
                   <div>
                     <strong className="text-lg">Diagnosis</strong>
                     <br />
-                    {selectedVisit.diagnosis}
+                    {selectedVisit.medicalDiagnosis}
                   </div>
                 ) : null}
                 {selectedVisit.medicalTreatment ? (
@@ -210,7 +210,7 @@ export default function Visits() {
             <input
               className="w-96"
               defaultValue=""
-              name="diagnosis"
+              name="medicalDiagnosis"
               placeholder="Strep throat"
               type="text"
             />
