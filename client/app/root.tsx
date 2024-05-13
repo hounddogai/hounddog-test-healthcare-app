@@ -64,11 +64,12 @@ export default function App() {
     }
   }, [q]);
 
+  const doctorEmail = "john.doe@advocadohealth.com";
   // Set user context for Sentry on App load
   useEffect(() => {
     Sentry.setUser({
       doctor_id: "1234",
-      doctor_email: "john.doe@advocadohealth.com",
+      doctor_email: doctorEmail,
     });
   }, [q]);
 
