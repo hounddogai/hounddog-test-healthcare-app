@@ -44,22 +44,7 @@ const fakePatients = {
     phoneNumber: "434-512-6512",
     bloodType: "O+",
     notes: "Allergic to penicillin",
-    visits: [
-      {
-        date: "04/21/2024",
-        vitalSigns: "BP 120/80, HR 70",
-        symptoms: "Headache",
-        medicalDiagnosis: "Migraine",
-        treatment: "Tylenol 100mg",
-      },
-      {
-        date: "05/04/2024",
-        vitalSigns: "BP 130/90, HR 80",
-        symptoms: "Sore throat",
-        medicalDiagnosis: "Strep throat",
-        treatment: "Amoxicillin 500mg",
-      },
-    ],
+    visits: [],
   },
   {
     firstName: "Robert",
@@ -69,6 +54,15 @@ const fakePatients = {
     address: "456 Elm St, Springfield, IL 62701",
     phoneNumber: "123-553-8413",
     bloodType: "AB-",
+    visits: [
+      {
+        date: "05/08/2024",
+        vitalSigns: "BP 110/70, HR 80",
+        patientSymptoms: "Stomach ache",
+        medicalDiagnosis: "Indigestion",
+        medicalTreatment: "Pepto-Bismol 2tbsp",
+      },
+    ],
   },
   {
     firstName: "Sarah",
@@ -79,6 +73,15 @@ const fakePatients = {
     phoneNumber: "463-555-7833",
     bloodType: "A+",
     notes: "Allergic to peanuts",
+    visits: [
+      {
+        date: "05/11/2024",
+        vitalSigns: "BP 130/90, HR 60",
+        patientSymptoms: "Fever",
+        medicalDiagnosis: "Flu",
+        medicalTreatment: "Tamiflu 40mg",
+      },
+    ],
   },
   {
     firstName: "Michael",
@@ -88,6 +91,22 @@ const fakePatients = {
     address: "1011 Pine St, Springfield, IL 62701",
     phoneNumber: "457-333-4907",
     bloodType: "B-",
+    visits: [
+      {
+        date: "04/21/2024",
+        vitalSigns: "BP 120/80, HR 70",
+        patientSymptoms: "Headache",
+        medicalDiagnosis: "Migraine",
+        medicalTreatment: "Tylenol 100mg",
+      },
+      {
+        date: "05/04/2024",
+        vitalSigns: "BP 130/90, HR 80",
+        patientSymptoms: "Sore throat",
+        medicalDiagnosis: "Strep throat",
+        medicalTreatment: "Amoxicillin 500mg",
+      },
+    ],
   },
 ].forEach((patient) => {
   fakePatients.create({
