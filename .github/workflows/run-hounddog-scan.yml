@@ -35,9 +35,10 @@ jobs:
 
       - name: Run HoundDog.ai Scan
         run: >
-          docker run --pull=always -v .:/scanpath hounddogai/scanner:staging
+          docker run --pull=always -v .:/scanpath 
           -e HOUNDDOG_API_KEY=${{ secrets.HOUNDDOG_API_KEY }}
-          -e OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} 
+          -e OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+          hounddogai/scanner:staging
           hounddog scan --output-filename=results.sarif --output-format=sarif
 
       - name: Print SARIF results
