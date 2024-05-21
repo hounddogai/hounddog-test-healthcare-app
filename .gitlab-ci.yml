@@ -1,11 +1,12 @@
 hounddog:
-  image:
-    name: hounddogai/scanner:staging
-    pull_policy: always
   script:
     - pip install httpx
-    - python scripts/clear_gitlab_scan_results.py
-    - hounddog scan --output-format=gitlab --output-filename=results.json
+    - python scripts/clear_gitlab_security_issues.py
+    - docker run --pull=always -v .:/scanpath
+      -e HOUNDDOG_API_KEY=$HOUNDDOG_API_KEY
+      -e OPENAI_API_KEY=$OPENAI_API_KEY
+      hounddogai/scanner:staging
+      hounddog scan --output-format=gitlab --output-filename=results.json
   artifacts:
     reports:
       sast: results.json

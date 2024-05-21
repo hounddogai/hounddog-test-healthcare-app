@@ -1,35 +1,31 @@
 #!/usr/bin/env python
 
 import os
+import sys
 
 import httpx
 
-
 if __name__ == "__main__":
-    base_url = "https://api.github.com/repos/hounddog-ai"
-    repo_name = "hounddog-test-healthcare-app"
-    headers = {
-        "Authorization": f"Bearer {os.environ['GITHUB_TOKEN']}",
-        "X-GitHub-Api-Version": "2022-11-28",
-    }
-    while True:
-        response = httpx.get(
-            url=f"{base_url}/{repo_name}/code-scanning/analyses",
-            headers=headers,
-        )
-        if not str(response.status_code).startswith("2"):
-            print(response.content, response.status_code)
-            break
+    http = httpx.Client(
+        base_url="https://api.github.com/repos/hounddogai/hounddog-test-healthcare-app",
+        headers={
+            "Authorization": f"Bearer {os.environ['GITHUB_TOKEN']}",
+            "X-GitHub-Api-Version": "2022-11-28",
+        },
+    )
+    resp = http.get("/code-scanning/analyses")
 
-        analyses = response.json()
-        print(f"Found {len(analyses)} analyses")
+    if resp.status_code == 404 and "no analysis" in resp.text.lower():
+        sys.exit("No security issues found")
 
-        for analysis in analyses:
-            response = httpx.delete(
-                f"{base_url}/{repo_name}/code-scanning/analyses/{analysis['id']}?confirm_delete",
-                headers=headers,
-            )
-            if str(response.status_code).startswith("2"):
-                print(f"Deleted code scanning analysis {analysis['id']}")
-            else:
-                print(response.content, response.status_code)
+    if not resp.is_success:
+        sys.exit(f"Failed to get security issues: {resp.status_code} {resp.text}")
+
+    security_issues = resp.json()
+    print(f"Found {len(security_issues)} security issues")
+
+    for issue in security_issues:
+        print(f"Deleting security issue {issue['id']} ...")
+        resp = http.delete(f"/code-scanning/analyses/{issue['id']}?confirm_delete")
+        if not resp.is_success:
+            sys.exit(f"Cannot delete issue {issue['id']}: {resp.status_code} {resp.text}")
