@@ -11,7 +11,7 @@ if __name__ == "__main__":
         base_url="https://gitlab.com/api/v4",
         headers={"Private-Token": os.environ["GITLAB_TOKEN"]},
     )
-    resp = http.get("/projects/58062337/vulnerabilities")
+    resp = http.get(f"/projects/{os.environ['CI_PROJECT_ID']}/vulnerabilities")
 
     if not resp.is_success:
         sys.exit(f"Failed to get security issues: {resp.status_code} {resp.text}")
