@@ -16,6 +16,9 @@ jobs:
       security-events: write
     container:
       image: hounddogai/scanner:staging
+      env:
+        HOUNDDOG_API_KEY: ${{ secrets.HOUNDDOG_API_KEY }}
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       volumes:
       - .:/scanpath
     # Skip pull requests created by dependabot
