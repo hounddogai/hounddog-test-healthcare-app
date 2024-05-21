@@ -3,10 +3,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-    debug:
-      type: boolean
-      description: Debug this workflow via SSH
-      default: false
+    inputs:
+      debug:
+        type: boolean
+        description: Debug this workflow via SSH
+        default: false
 
 jobs:
   scan:
