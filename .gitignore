@@ -12,5 +12,9 @@ npm-debug.log*
 .idea
 .vscode
 
+# Direnv
+.envrc
+.direnv/
+
 # HoundDog.ai
-*hounddog*
+./hounddog*

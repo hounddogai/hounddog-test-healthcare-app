@@ -1,0 +1,11 @@
+hounddog:
+  image:
+    name: hounddogai/scanner:staging
+    pull_policy: always
+  script:
+    - pip install httpx
+    - python scripts/clear_gitlab_scan_results.py
+    - hounddog scan --output-format=gitlab --output-filename=results.json
+  artifacts:
+    reports:
+      sast: results.json

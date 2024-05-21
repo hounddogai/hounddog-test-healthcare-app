@@ -1,0 +1,15 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- checkout: self
+  displayName: Checkout repository
+
+- script: | 
+    docker run -t -v .:/scanpath hounddogai/scanner:staging hounddog scan \
+      --output-format=markdown \
+      --output-filename=results.md
+  displayName: Run HoundDog.ai scan

@@ -1,0 +1,8 @@
+pipelines:
+  branches:
+    main:
+      - step:
+          name: Run HoundDog.ai Scan
+          image: hounddogai/scanner:staging
+          script:
+            - hounddog scan --output-format=markdown --output-filename=results.md

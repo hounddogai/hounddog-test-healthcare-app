@@ -1,0 +1,34 @@
+name: Sync Repository Mirrors
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sync-bitbucket:
+    name: Sync Bitbucket mirror
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Push to Bitbucket mirror
+        run: |
+          git config user.email ${{ secrets.BITBUCKET_EMAIL }}
+          git push https://x-token-auth:${{ secrets.BITBUCKET_TOKEN }}@bitbucket.org/hounddogai-ws/hounddog-test-healthcare-app.git main --force
+
+  sync-gitlab:
+    name: Sync GitLab mirror
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Push to GitLab mirror
+        run: git push https://gitlab-ci-token:${{ secrets.GITLAB_TOKEN }}@gitlab.com/hounddog-ai/hounddog-test-healthcare-app.git main --force
