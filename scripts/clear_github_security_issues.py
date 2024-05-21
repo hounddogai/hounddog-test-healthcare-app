@@ -16,7 +16,7 @@ if __name__ == "__main__":
     resp = http.get("/code-scanning/analyses")
 
     if resp.status_code == 404 and "no analysis" in resp.text.lower():
-        sys.exit("No security issues found")
+        sys.exit(0)
 
     if not resp.is_success:
         sys.exit(f"Failed to get security issues: {resp.status_code} {resp.text}")
