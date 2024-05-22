@@ -1,10 +1,28 @@
 hounddog:
+  allow_failure: true
   image:
-    name: hounddogai/scanner
-    pull_policy: always
+    name: docker:latest
+  variables:
+    HOUNDDOG_API_KEY: $HOUNDDOG_API_KEY
   script:
-#    - python scripts/clear_gitlab_security_issues.py
-    - hounddog scan --output-format=gitlab --output-filename=results.json --debug
+    - docker run 
+      -v .:/scanpath hounddogai/scanner
+      -e HOUNDDOG_API_KEY=$HOUNDDOG_API_KEY
+      hounddog scan 
+      --output-format=gitlab 
+      --output-filename=hounddog.json
+      --no-upload-scan-results
   artifacts:
     reports:
-      sast: results.json
+      sast: hounddog.json
+#
+#hounddog-weekly:
+#  allow_failure: true
+#  image:
+#    name: hounddogai/scanner
+#    pull_policy: always
+#  variables:
+#    HOUNDDOG_API_KEY: $HOUNDDOG_API_KEY
+#    OPENAI_API_KEY: $OPENAI_API_KEY
+#  script:
+#    - hounddog scan --discover-data-elements
