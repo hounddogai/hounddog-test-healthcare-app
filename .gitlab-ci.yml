@@ -4,7 +4,7 @@ hounddog:
     pull_policy: always
   script:
 #    - python scripts/clear_gitlab_security_issues.py
-    - hounddog scan --output-format=gitlab --output-filename=results.json
+    - hounddog scan --output-format=gitlab --output-filename=results.json --debug
   artifacts:
     reports:
       sast: results.json
