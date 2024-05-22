@@ -11,10 +11,14 @@ on:
 
 jobs:
   scan:
+    name: Run HoundDog.ai Scan
     runs-on: ubuntu-latest
     permissions:
       contents: read
       security-events: write
+    container:
+      image: hounddogai/scanner:staging
+      options: --pull=always
     # Skip pull requests created by dependabot
     if: (github.actor != 'dependabot[bot]')
     steps:
@@ -34,12 +38,12 @@ jobs:
         run: python scripts/clear_github_security_issues.py
 
       - name: Run HoundDog.ai Scan
+        env:
+          HOUNDDOG_API_KEY: ${{ secrets.HOUNDDOG_API_KEY }}
         run: >
-          docker run --pull=always -v .:/scanpath 
-          -e HOUNDDOG_API_KEY=${{ secrets.HOUNDDOG_API_KEY }}
-          -e OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
-          hounddogai/scanner:staging
-          hounddog scan --output-filename=results.sarif --output-format=sarif
+          hounddog scan 
+          --output-filename=results.sarif 
+          --output-format=sarif
 
       - name: Print SARIF results
         run: cat results.sarif
