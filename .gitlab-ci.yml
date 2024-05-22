@@ -1,6 +1,6 @@
 hounddog:
   image:
-    name: hounddogai/scanner:staging
+    name: hounddogai/scanner
     pull_policy: always
   script:
 #    - python scripts/clear_gitlab_security_issues.py
