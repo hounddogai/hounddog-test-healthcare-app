@@ -1,7 +1,7 @@
 hounddog:
   allow_failure: true
   image:
-    name: hounddogai/scanner
+    name: hounddogai/scanner:staging
     pull_policy: always
   variables:
     HOUNDDOG_API_KEY: $HOUNDDOG_API_KEY
