@@ -6,10 +6,11 @@ hounddog:
   variables:
     HOUNDDOG_API_KEY: $HOUNDDOG_API_KEY
   script:
-    - python scripts/clear_gitlab_security_issues.py
+#    - python scripts/clear_gitlab_security_issues.py
     - hounddog scan 
       --output-format=gitlab 
       --output-filename=hounddog.json
+    - cat hounddog.json
   artifacts:
     reports:
       sast: hounddog.json
