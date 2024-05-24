@@ -1,24 +1,26 @@
 trigger:
-- main
+  - main
 
 pool:
   vmImage: ubuntu-latest
 
 variables:
-- group: staging
+  - group: staging
 
 steps:
-- checkout: self
-  displayName: Checkout repository
+  - checkout: self
+    displayName: Checkout repository
 
-- script: >
-    docker run -t -v .:/scanpath
-    -e HOUNDDOG_API_KEY=$(HoundDogApiKey) 
-    hounddogai/scanner:staging hounddog scan
-    --output-format=json
-    --output-filename=results.json
-    --debug
-  displayName: Run HoundDog.ai scan
+  - script: >
+      docker run -t -v .:/scanpath
+      -e AZURE_PIPELINES=1
+      -e HOUNDDOG_GIT_BRANCH=$(Build.SourceBranchName)
+      -e HOUNDDOG_API_KEY=$(HoundDogApiKey) 
+      hounddogai/scanner:staging hounddog scan
+      --output-format=json
+      --output-filename=hounddog.json
+      --debug
+    displayName: Run HoundDog.ai Scan
 
-- script: cat results.json
-  displayName: Display HoundDog.ai scan results JSON
+  - script: cat hounddog.json
+    displayName: Display HoundDog.ai scan results JSON
