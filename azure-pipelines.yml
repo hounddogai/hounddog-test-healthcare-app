@@ -10,6 +10,12 @@ steps:
 
 - script: | 
     docker run -t -v .:/scanpath hounddogai/scanner:staging hounddog scan \
-      --output-format=markdown \
-      --output-filename=results.md
+      --output-format=json \
+      --output-filename=results.json \
+      --debug
+  env:
+    HOUNDDOG_API_KEY: $(HoundDogApiKey)
   displayName: Run HoundDog.ai scan
+
+- script: cat results.json
+  displayName: Display HoundDog.ai scan results JSON

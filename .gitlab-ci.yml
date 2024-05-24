@@ -10,6 +10,7 @@ hounddog:
     - hounddog scan 
       --output-format=gitlab 
       --output-filename=hounddog.json
+      --debug
     - cat hounddog.json
   artifacts:
     reports:
