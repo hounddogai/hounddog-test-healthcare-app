@@ -7,4 +7,13 @@ jobs:
       - checkout
       - run:
           name: Run HoundDog.ai Scan
-          command: hounddog scan --output-format=console
+          environment:
+            HOUNDDOG_API_KEY: $HOUNDDOG_API_KEY
+          command: > 
+            hounddog scan 
+            --output-format=json 
+            --output-filename=hounddog.json 
+            --debug
+      - run:
+          name: Display HoundDog.ai scan results JSON
+          command: cat hounddog.json

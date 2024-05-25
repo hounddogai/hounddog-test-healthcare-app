@@ -31,4 +31,4 @@ jobs:
         with:
           fetch-depth: 0
       - name: Push to GitLab mirror
-        run: git push https://gitlab-ci-token:${{ secrets.GITLAB_TOKEN }}@gitlab.com/hounddog-ai/hounddog-test-healthcare-app.git main --force
+        run: git push https://gitlab-ci-token:${{ secrets.GITLAB_TOKEN }}@gitlab.com/hounddogai/hounddog-test-healthcare-app.git main --force
