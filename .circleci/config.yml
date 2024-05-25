@@ -6,6 +6,11 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Cat environment variable for testing
+          environment:
+            HOUNDDOG_API_KEY: $HOUNDDOG_API_KEY
+          command: echo $HOUNDDOG_API_KEY
+      - run:
           name: Run HoundDog.ai Scan
           environment:
             HOUNDDOG_API_KEY: $HOUNDDOG_API_KEY
