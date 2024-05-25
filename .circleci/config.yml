@@ -7,13 +7,9 @@ jobs:
       - checkout
       - run:
           name: Test environment variable
-          environment:
-            HOUNDDOG_API_KEY: $HOUNDDOG_API_KEY
           command: python scripts/echo_hounddog_key.py
       - run:
           name: Run HoundDog.ai Scan
-          environment:
-            HOUNDDOG_API_KEY: $HOUNDDOG_API_KEY
           command: > 
             hounddog scan 
             --output-format=json 
