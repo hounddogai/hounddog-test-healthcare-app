@@ -2,88 +2,98 @@
 
 import os
 import sys
+import time
+from typing import Any
 
 import httpx
 
 
-def run_graphql_query(query):
+def run_gitlab_graphql(operation: str) -> Any:
+    token = os.environ.get("GITLAB_TOKEN")
+    if not token:
+        sys.exit("GITLAB_TOKEN environment variable is not set")
+
     response = httpx.post(
         url="https://gitlab.com/api/graphql",
         headers={
-            "Authorization": f"Bearer {os.environ['GITLAB_TOKEN']}",
+            "Authorization": f"Bearer {token}",
             "Content-Type": "application/json",
         },
-        json={"query": query},
+        json={"query": operation},
         timeout=30,
     )
-    if not response.is_success:
-        sys.exit(f"Error executing query: {response.status_code} {response.text}")
-    return response.json()
+    if response.is_success:
+        return response.json()
+    else:
+        sys.exit(f"GraphQL API Error: {response.status_code} {response.text}")
 
 
-def get_vulnerabilities():
-    """Retrieve all open vulnerabilities for a given project."""
-    query = """
-    query {
-      project(fullPath: "hounddog-ai/hounddog-test-healthcare-app") {
-        vulnerabilities(state: [DETECTED, CONFIRMED]) {
-          nodes { id }
-        }
-      }  
-    }
+def get_project_global_id(project_full_name: str) -> str:
     """
-    result = run_graphql_query(query)
-    print(result)
+    Get the GitLab project Global ID given its full name.
 
-
-def resolve_vulnerability(vulnerability_id):
-    mutation = """
-    mutation {
-      vulnerabilityResolve(input: { id: "gid://gitlab/Vulnerability/23577695"}) {
-        vulnerability {
-          state
-        }
-        errors
-      }
-    }
+    :param project_full_name: Project name in the format "namespace/project"
+    :return: Project Global ID (e.g. "gid://gitlab/Project/58149530")
     """
-
-    """Close a vulnerability by its ID."""
-    mutation = f"""
-    mutation {{
-      vulnerabilityDismiss(input: {{ id: "{vulnerability_id}", comment: "Closed by automated script" }}) {{
-        errors
-        vulnerability {{
+    project_name = project_full_name.split("/")[-1]
+    query = f"""
+    query {{
+      projects(search: "{project_name}", membership: true) {{
+        nodes {{
           id
-          title
-          state
         }}
       }}
     }}
     """
-    result = run_graphql_query(mutation)
-    if result:
-        return result["data"]["vulnerabilityDismiss"]["vulnerability"]
-    return None
+    response = run_gitlab_graphql(query)
+    nodes = response["data"]["projects"]["nodes"]
+    if nodes:
+        return nodes[0]["id"]
+    else:
+        sys.exit("GitLab project not found")
+
+
+def get_vulnerabilities(project_full_name: str) -> list[dict[str, Any]]:
+    """
+    Get the list of vulnerabilities for a project.
+
+    :param project_full_name: Project full name in the format "namespace/project".
+    :return: List of vulnerabilities.
+    """
+    query = f"""
+    query {{
+      project(fullPath: "{project_full_name}") {{
+        vulnerabilities {{
+          nodes {{ id }}
+        }}
+      }}  
+    }}
+    """
+    response = run_gitlab_graphql(query)
+    return response["data"]["project"]["vulnerabilities"]["nodes"]
+
+
+def remove_all_vulnerabilities_from_project(project_full_name: str) -> list[dict[str, Any]]:
+    project_global_id = get_project_global_id(project_full_name)
+    mutation = f"""
+    mutation {{  
+      vulnerabilitiesRemoveAllFromProject(input: {{projectIds: ["{project_global_id}"]}}) {{
+        errors
+      }}
+    }}
+    """
+    return run_gitlab_graphql(mutation)
 
 
 if __name__ == "__main__":
-    get_vulnerabilities()
+    project_full_name = "hounddogai/hounddog-test-healthcare-app"
+    project_global_id = get_project_global_id(project_full_name)
 
-    # resp = http.get(f"/projects/{os.environ['CI_PROJECT_ID']}/vulnerabilities")
-    #
-    # if not resp.is_success:
-    #     sys.exit(f"Failed to get security issues: {resp.status_code} {resp.text}")
-    #
-    # security_issues = resp.json()
-    # print(
-    #     f"Found {len(security_issues)} security issues in project {os.environ['CI_PROJECT_ID']}"
-    # )
-    #
-    # for issue in security_issues:
-    #     print(f"Resolving security issue {issue['id']} ...")
-    #     resp = http.delete(f"/vulnerabilities/{issue['id']}/resolve")
-    #     if resp.status_code not in (201, 304):
-    #         sys.exit(
-    #             f"Cannot resolve issue {issue['id']}: {resp.status_code} {resp.text}"
-    #         )
+    # Remove all vulnerabilities from the project. This is an asynchronous operation.
+    remove_all_vulnerabilities_from_project(project_full_name)
+
+    # Wait until the vulnerabilities are removed.
+    for _ in range(20):
+        if not get_vulnerabilities(project_full_name):
+            break
+        time.sleep(1)
