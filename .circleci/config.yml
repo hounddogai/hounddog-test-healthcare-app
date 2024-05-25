@@ -6,9 +6,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Test environment variable
-          command: python scripts/echo_hounddog_key.py
-      - run:
           name: Run HoundDog.ai Scan
           command: > 
             hounddog scan 
