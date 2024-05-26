@@ -5,6 +5,7 @@ hounddog:
     pull_policy: always
   variables:
     HOUNDDOG_API_KEY: $HOUNDDOG_API_KEY
+    GITLAB_TOKEN: $GITLAB_TOKEN
   script:
     - python scripts/clear_gitlab_security_issues.py
     - hounddog scan 
