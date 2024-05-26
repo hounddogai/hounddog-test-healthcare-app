@@ -1,7 +1,7 @@
 hounddog:
   allow_failure: true
   image:
-    name: hounddogai/scanner:staging
+    name: hounddogai/scanner:$HOUNDDOG_DOCKER_IMAGE_TAG
     pull_policy: always
   script:
     - python scripts/clear_gitlab_security_issues.py
