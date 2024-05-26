@@ -2,6 +2,9 @@ pipeline {
     agent any
     stages {
         stage('Run HoundDog.ai Scan') {
+            environment {
+                HOUNDDOG_API_KEY = credentials('hounddog-api-key')
+            }
             steps {
                 sh '''
                 docker run --pull=always --rm -v .:/scanpath hounddogai/scanner:staging \
