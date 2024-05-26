@@ -9,7 +9,7 @@ import httpx
 
 
 def run_gitlab_graphql(operation: str) -> Any:
-    token = os.environ.get("GITLAB_TOKEN")
+    token = os.environ.get("GITLAB_TOKEN", "").strip()
     if not token:
         sys.exit("GITLAB_TOKEN environment variable is not set")
 
