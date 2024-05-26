@@ -7,9 +7,9 @@ pipeline {
             }
             steps {
                 sh '''
-                docker run --pull=always --rm -v .:/scanpath hounddogai/scanner:staging \
+                docker run --pull=always --rm -v .:/scanpath \
                     -e HOUNDDOG_API_KEY=$HOUNDDOG_API_KEY \
-                    hounddog scan \
+                    hounddogai/scanner:staging hounddog scan \
                     --output-format=json \
                     --output-filename=hounddog.json \
                     --debug
