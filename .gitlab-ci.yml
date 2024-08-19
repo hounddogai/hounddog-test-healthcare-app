@@ -14,7 +14,7 @@ hounddog:
   stage: scan
   allow_failure: true
   image:
-    name: hounddogai/scanner:$HOUNDDOG_DOCKER_IMAGE_TAG
+    name: hounddogai/hounddog:$HOUNDDOG_DOCKER_IMAGE_TAG
     pull_policy: always
   script:
     - hounddog scan 

@@ -3,11 +3,14 @@ pipelines:
     main:
       - step:
           name: Run HoundDog.ai Scan
-          image: hounddogai/scanner:staging
+          image: hounddogai/hounddog:staging
           script:
+            - pwd
+            - ls -la
             - export HOUNDDOG_API_KEY=$HOUNDDOG_API_KEY
             - hounddog scan 
               --output-format=json 
               --output-filename=hounddog.json 
               --debug
+            - ls -la
             - cat hounddog.json

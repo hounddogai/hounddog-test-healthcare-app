@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: hounddogai/scanner:staging
+      - image: hounddogai/hounddog:staging
     steps:
       - checkout
       - run:
@@ -12,6 +12,9 @@ jobs:
             --output-format=json 
             --output-filename=hounddog.json 
             --debug
+      - run:
+          name: List all files in the repository
+          command: ls -la
       - run:
           name: Display HoundDog.ai scan results JSON
           command: cat hounddog.json

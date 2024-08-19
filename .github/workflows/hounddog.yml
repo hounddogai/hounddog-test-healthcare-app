@@ -3,13 +3,24 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-    inputs:
-      debug:
-        type: boolean
-        description: Debug this workflow via SSH
-        default: false
 
 jobs:
+  clearn_security_issues:
+    name: Clear existing security issues
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@master
+      - name: Install requirements
+        run: pip install httpx
+      - name: Clear code scanning alerts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/clear_github_security_issues.py
+
   scan:
     name: Run HoundDog.ai Scan
     runs-on: ubuntu-latest
@@ -17,26 +28,13 @@ jobs:
       contents: read
       security-events: write
     container:
-      image: hounddogai/scanner:staging
+      image: hounddogai/hounddog:staging
       options: --pull=always
     # Skip pull requests created by dependabot
     if: (github.actor != 'dependabot[bot]')
     steps:
       - name: Checkout repository
         uses: actions/checkout@master
-
-      - name: Debug workflow via SSH
-        uses: mxschmitt/action-tmate@v3
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug }}
-
-      - name: Install requirements
-        run: pip install httpx
-
-      - name: Clear code scanning alerts
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python scripts/clear_github_security_issues.py
-
       - name: Run HoundDog.ai Scan
         env:
           HOUNDDOG_API_KEY: ${{ secrets.HOUNDDOG_API_KEY }}
@@ -44,10 +42,8 @@ jobs:
           hounddog scan 
           --output-filename=results.sarif 
           --output-format=sarif
-
       - name: Print SARIF results
         run: cat results.sarif
-
       - name: Upload SARIF results to GitHub
         uses: github/codeql-action/upload-sarif@v3
         with:
