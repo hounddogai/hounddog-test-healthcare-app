@@ -17,7 +17,10 @@ hounddog:
     name: hounddogai/$HOUNDDOG_DOCKER_IMAGE_NAME:$HOUNDDOG_DOCKER_IMAGE_TAG
     pull_policy: always
   script:
-    - hounddog scan --output-format=gitlab > hounddog.json 2>&1 || { cat hounddog.json; exit 1; }
+    - hounddog definitions
+    - hounddog definitions --output-format=json
+    - hounddog scan
+    - hounddog scan --output-format=gitlab > hounddog.json
     - cat hounddog.json
   artifacts:
     reports:

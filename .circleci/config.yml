@@ -6,11 +6,14 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Run HoundDog.ai Scan
-          command: hounddog scan --output-format=json > hounddog.json 2>&1 || { cat hounddog.json; exit 1; }
+          name: Display HoundDog.ai Definitions (Console Output)
+          command: hounddog definitions
       - run:
-          name: List all files in the repository
-          command: ls -la
+          name: Display HoundDog.ai Definitions (JSON Output)
+          command: hounddog definitions --output-format=json
       - run:
-          name: Display HoundDog.ai scan results JSON
-          command: cat hounddog.json
+          name: Run HoundDog.ai Scan (Console Output)
+          command: hounddog scan
+      - run:
+          name: Run HoundDog.ai Scan (JSON Output)
+          command: hounddog scan --output-format=json

@@ -2,9 +2,15 @@ pipelines:
   branches:
     main:
       - step:
+          name: Display HoundDog.ai Definitions
+          image: hounddogai/hounddog:staging
+          script:
+            - hounddog definitions
+            - hounddog definitions --output-format=json
+      - step:
           name: Run HoundDog.ai Scan
           image: hounddogai/hounddog:staging
           script:
             - export HOUNDDOG_API_KEY=$HOUNDDOG_API_KEY
-            - hounddog scan --output-format=json > hounddog.json 2>&1 || { cat hounddog.json; exit 1; }
-            - cat hounddog.json
+            - hounddog scan
+            - hounddog scan --output-format=json
