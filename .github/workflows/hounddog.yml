@@ -38,10 +38,7 @@ jobs:
       - name: Run HoundDog.ai Scan
         env:
           HOUNDDOG_API_KEY: ${{ secrets.HOUNDDOG_API_KEY }}
-        run: >
-          hounddog scan 
-          --output-filename=results.sarif 
-          --output-format=sarif
+        run: hounddog scan --output-format=sarif > hounddog.json 2>&1 || { cat hounddog.json; exit 1; }
       - name: Print SARIF results
         run: cat results.sarif
       - name: Upload SARIF results to GitHub

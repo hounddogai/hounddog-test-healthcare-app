@@ -7,12 +7,10 @@ pipeline {
             }
             steps {
                 sh '''
-                docker run --pull=always --rm -v .:/data \
+                docker run --pull=always --rm -t -v .:/data --pull=always \
                     -e HOUNDDOG_API_KEY=$HOUNDDOG_API_KEY \
                     hounddogai/hounddog:staging hounddog scan \
-                    --output-format=json \
-                    --output-filename=hounddog.json \
-                    --debug
+                    --output-format=json > hounddog.json 2>&1 || { cat hounddog.json; exit 1; }
                 '''
                 sh 'cat hounddog.json'
             }

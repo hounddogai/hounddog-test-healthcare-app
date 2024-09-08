@@ -11,21 +11,12 @@ steps:
   - checkout: self
     displayName: Checkout repository
 
-  - script: pwd
-    displayName: Print working directory
-
-  - script: ls -la
-    displayName: List all files in the repository
-
   - script: >
-      docker run -t -v .:/data --pull=always
+      docker run --rm -t -v .:/data --pull=always
       -e AZURE_PIPELINES=1
       -e HOUNDDOG_API_KEY=$(HoundDogApiKey) 
-      hounddogai/hounddog:staging hounddog scan
-      --output-format=json
-      --output-filename=hounddog.json
-      --debug
+      hounddogai/hounddog:staging hounddog scan --output-format=json > hounddog.json 2>&1 || { cat hounddog.json; exit 1; }
     displayName: Run HoundDog.ai Scan
 
-  - script: ls -la
-    displayName: List all files in the repository
+  - script: cat hounddog.json
+    displayName: Display HoundDog.ai scan results JSON

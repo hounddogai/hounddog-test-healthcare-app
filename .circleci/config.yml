@@ -7,11 +7,7 @@ jobs:
       - checkout
       - run:
           name: Run HoundDog.ai Scan
-          command: > 
-            hounddog scan 
-            --output-format=json 
-            --output-filename=hounddog.json 
-            --debug
+          command: hounddog scan --output-format=json > hounddog.json 2>&1 || { cat hounddog.json; exit 1; }
       - run:
           name: List all files in the repository
           command: ls -la
