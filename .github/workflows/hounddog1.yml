@@ -1,0 +1,27 @@
+name: HoundDog.ai Scan Workflow
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs daily at midnight UTC
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  scan:
+    name: Run HoundDog.ai Scan
+    runs-on: prod-us-east-1-ubuntu-arm64
+    permissions:
+      contents: read
+      security-events: write
+    container:
+      image: hounddogai/hounddog
+      options: --pull=always
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Display HoundDog.ai Definitions (Console Output)
+        run: hounddog definitions
+      - name: Run HoundDog.ai Scan (Console Output)
+        env:
+          HOUNDDOG_API_KEY: ${{ secrets.HOUNDDOG_API_KEY }}
+        run: hounddog scan --fail-severity-threshold=low
