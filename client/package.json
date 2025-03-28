@@ -14,7 +14,7 @@
     "@remix-run/node": "^2.9.1",
     "@remix-run/react": "^2.9.1",
     "@remix-run/serve": "^2.9.1",
-    "@sentry/remix": "^7.114.0",
+    "@sentry/remix": "^7.120.3",
     "@sentry/vite-plugin": "^2.16.1",
     "isbot": "^4.1.0",
     "match-sorter": "^6.3.1",
@@ -42,7 +42,7 @@
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.3",
     "typescript": "^5.1.6",
-    "vite": "^5.1.4",
+    "vite": "^5.4.14",
     "vite-tsconfig-paths": "^4.3.1"
   },
   "engines": {
