@@ -11,11 +11,11 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
-    "body-parser": "^1.20.2",
-    "cookie-parser": "^1.4.6",
+    "body-parser": "^1.20.3",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "express": "^4.19.2",
-    "express-session": "^1.18.0",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
     "install": "^0.13.0",
     "jsonwebtoken": "^9.0.2",
     "match-sorter": "^6.3.4",
