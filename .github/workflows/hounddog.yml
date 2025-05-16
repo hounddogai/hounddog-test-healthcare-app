@@ -1,55 +1,23 @@
-name: Run HoundDog.ai Scan
+name: HoundDog.ai Scan
 on:
+  workflow_dispatch: {}
   push:
-    branches: [main]
-  workflow_dispatch:
-
+    branches:
+    - main
 jobs:
-  clearn_security_issues:
-    name: Clear existing security issues
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@master
-      - name: Install requirements
-        run: pip install httpx
-      - name: Clear code scanning alerts
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python scripts/clear_github_security_issues.py
-
-  scan:
+  hounddog:
     name: Run HoundDog.ai Scan
-    runs-on: ubuntu-latest
+    runs-on: custom runner
     permissions:
       contents: read
       security-events: write
     container:
-      image: hounddogai/hounddog:staging
+      image: hounddogai/hounddog
       options: --pull=always
-    # Skip pull requests created by dependabot
-    if: (github.actor != 'dependabot[bot]')
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@master
-      - name: Display HoundDog.ai Definitions (Console Output)
-        run: hounddog definitions
-      - name: Display HoundDog.ai Definitions (JSON Output)
-        run: hounddog definitions --output-format=json
-      - name: Run HoundDog.ai Scan (Console Output)
-        env:
-          HOUNDDOG_API_KEY: ${{ secrets.HOUNDDOG_API_KEY }}
-        run: hounddog scan
-      - name: Run HoundDog.ai Scan (SARIF Output)
-        env:
-          HOUNDDOG_API_KEY: ${{ secrets.HOUNDDOG_API_KEY }}
-        run: hounddog scan --output-format=sarif > hounddog.sarif
-      - name: Display SARIF Output
-        run: cat hounddog.sarif
-      - name: Upload SARIF Output to GitHub
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: hounddog.sarif
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Run HoundDog.ai Scan
+      env:
+        HOUNDDOG_API_KEY: ${{ secrets.HOUNDDOG_API_KEY }}
+      run: hounddog scan
