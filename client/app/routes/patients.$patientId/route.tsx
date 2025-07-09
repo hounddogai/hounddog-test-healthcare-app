@@ -42,7 +42,7 @@ export default function Patient() {
   useEffect(() => {
     // Sending to Google Analytics
     if (window?.dataLayer) {
-      window.dataLayer.push({
+      console.log({
         event: "Visiting Patient Page",
         patientFirstName: patient.firstName,
         patientLastName: patient.lastName,
