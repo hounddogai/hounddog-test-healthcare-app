@@ -15,7 +15,7 @@
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.19.2",
-    "express-session": "^1.18.0",
+    "express-session": "^1.18.2",
     "install": "^0.13.0",
     "jsonwebtoken": "^9.0.2",
     "match-sorter": "^6.3.4",
