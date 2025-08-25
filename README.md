@@ -25,7 +25,7 @@ allows doctors to manage patient visits.
 Clone this repository and `cd` into it:
 
 ```sh
-git clone https://github.com/hounddogai/hounddog-test-government-app && cd hounddog-test-healthcare-app
+git clone https://github.com/hounddogai/hounddog-test-healthcare-app && cd hounddog-test-healthcare-app
 ```
 
 Start the application stack using Docker Compose and open http://localhost:5173 in your browser:

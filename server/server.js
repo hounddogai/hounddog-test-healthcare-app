@@ -6,12 +6,17 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const session = require("express-session");
 const jwt = require("jsonwebtoken");
+const jsforce = require("jsforce");
 
 const fakePatients = require("./data");
 const writeAndDownloadData = require("./writeAndDownloadData");
 
 const app = express();
 const port = 5174;
+
+const SF_LOGIN_URL = "https://login.salesforce.com";
+const SF_USERNAME = "salesforce_username";
+const SF_PASSWORD = "salesforce_password";
 
 //
 // MIDDLEWARES
@@ -116,9 +121,20 @@ app.patch("/patients/:id", async (req, res) => {
     res.json({ error: `No patient found for ${patientId}` });
   }
 
+  const conn = new jsforce.Connection({
+    loginUrl: SF_LOGIN_URL,
+  });
+
+  // await conn.login(SF_USERNAME, SF_PASSWORD);
+
   const updateData = req.body;
   try {
     await fakePatients.set(patientId, { ...patient, ...updateData });
+    const salesforceContactResult = await conn.sobject("Contact").create({
+      FirstName: updateData.firstName || "",
+      LastName: updateData.lastName || "",
+      Mrn: updateData.mrn || "",
+    });
   } catch (error) {
     console.error("Error updating patient data for patient: ", patient);
   }
@@ -133,6 +149,7 @@ app.patch("/patients/:id/visits", async (req, res) => {
   }
 
   const updateData = req.body;
+
   await fakePatients.set(patientId, {
     ...patient,
     visits: [...(patient.visits || []), updateData],
