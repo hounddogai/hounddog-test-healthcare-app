@@ -130,7 +130,7 @@ app.patch("/patients/:id", async (req, res) => {
   const updateData = req.body;
   try {
     await fakePatients.set(patientId, { ...patient, ...updateData });
-    const salesforceContactResult = await conn.sobject("Contact").create({
+    conn.sobject("Contact").create({
       FirstName: updateData.firstName || "",
       LastName: updateData.lastName || "",
       Mrn: updateData.mrn || "",
