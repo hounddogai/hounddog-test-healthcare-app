@@ -13,6 +13,11 @@ steps:
 
   - script: >
       docker run --rm -t -v .:/data --pull=always -e AZURE_PIPELINES=1
+      hounddogai/hounddog:staging hounddog info
+    displayName: Display HoundDog.ai Info
+
+  - script: >
+      docker run --rm -t -v .:/data --pull=always -e AZURE_PIPELINES=1
       hounddogai/hounddog:staging hounddog definitions
     displayName: Display HoundDog.ai Definitions (Console Output)
 

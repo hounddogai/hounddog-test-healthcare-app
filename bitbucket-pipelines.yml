@@ -2,6 +2,11 @@ pipelines:
   branches:
     main:
       - step:
+          name: Display HoundDog.ai Info
+          image: hounddogai/hounddog:staging
+          script:
+            - hounddog info
+      - step:
           name: Display HoundDog.ai Definitions
           image: hounddogai/hounddog:staging
           script:

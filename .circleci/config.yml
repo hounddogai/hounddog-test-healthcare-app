@@ -6,6 +6,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Display HoundDog.ai Info
+          command: hounddog info
+      - run:
           name: Display HoundDog.ai Definitions (Console Output)
           command: hounddog definitions
       - run:

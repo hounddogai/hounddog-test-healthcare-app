@@ -35,6 +35,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@master
+      - name: Display HoundDog.ai Info
+        run: hounddog infon
       - name: Display HoundDog.ai Definitions (Console Output)
         run: hounddog definitions
       - name: Display HoundDog.ai Definitions (JSON Output)

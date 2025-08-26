@@ -17,6 +17,7 @@ hounddog:
     name: hounddogai/$HOUNDDOG_DOCKER_IMAGE_NAME:$HOUNDDOG_DOCKER_IMAGE_TAG
     pull_policy: always
   script:
+    - hounddog info
     - hounddog definitions
     - hounddog definitions --output-format=json
     - hounddog scan
