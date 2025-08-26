@@ -30,24 +30,22 @@ jobs:
     container:
       image: hounddogai/hounddog:staging
       options: --pull=always
+    env:
+      HOUNDDOG_API_KEY: ${{ secrets.HOUNDDOG_API_KEY }}
     # Skip pull requests created by dependabot
     if: (github.actor != 'dependabot[bot]')
     steps:
       - name: Checkout repository
         uses: actions/checkout@master
       - name: Display HoundDog.ai Info
-        run: hounddog infon
+        run: hounddog info
       - name: Display HoundDog.ai Definitions (Console Output)
         run: hounddog definitions
       - name: Display HoundDog.ai Definitions (JSON Output)
         run: hounddog definitions --output-format=json
       - name: Run HoundDog.ai Scan (Console Output)
-        env:
-          HOUNDDOG_API_KEY: ${{ secrets.HOUNDDOG_API_KEY }}
         run: hounddog scan
       - name: Run HoundDog.ai Scan (SARIF Output)
-        env:
-          HOUNDDOG_API_KEY: ${{ secrets.HOUNDDOG_API_KEY }}
         run: hounddog scan --output-format=sarif > hounddog.sarif
       - name: Display SARIF Output
         run: cat hounddog.sarif
