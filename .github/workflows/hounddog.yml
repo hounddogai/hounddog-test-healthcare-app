@@ -31,6 +31,7 @@ jobs:
       image: hounddogai/hounddog:staging
       options: --pull=always
     env:
+      HOUNDDOG_ENV: staging
       HOUNDDOG_API_KEY: ${{ secrets.HOUNDDOG_API_KEY }}
     # Skip pull requests created by dependabot
     if: (github.actor != 'dependabot[bot]')
