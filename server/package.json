@@ -20,7 +20,7 @@
     "jsforce": "^3.10.4",
     "jsonwebtoken": "^9.0.2",
     "match-sorter": "^6.3.4",
-    "npm": "^10.7.0",
+    "npm": "^10.9.4",
     "sort-by": "^0.0.2"
   },
   "devDependencies": {
