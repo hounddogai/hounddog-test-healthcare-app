@@ -11,10 +11,10 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
-    "body-parser": "^1.20.2",
+    "body-parser": "^1.20.4",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
-    "express": "^4.19.2",
+    "express": "^4.22.0",
     "express-session": "^1.18.0",
     "install": "^0.13.0",
     "jsforce": "^3.10.4",
